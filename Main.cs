@@ -3,7 +3,7 @@ namespace ipinfo
     using System.Runtime.Serialization.Json;
     public partial class Main : Form
     {
-        private const string url ="https://api.ip.sb/geoip";
+        private const string url = "https://api-ipv4.ip.sb/geoip";
         private const string networkError = "Network error";
         private const string space = " ";
         private bool down = false;
