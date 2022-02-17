@@ -18,9 +18,10 @@ namespace ipinfo
         }
         private void run() {
             IPSB ipsb;
+            object? obj;
             while (runFlag)
             {
-                object? obj = getIpInfo();
+                obj = getIpInfo();
                 if (obj != null)
                 {
                     ipsb = (IPSB)obj;
