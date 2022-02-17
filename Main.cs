@@ -1,8 +1,15 @@
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Runtime.Serialization.Json;
+using System.Threading;
+using System.Net.Http;
+
 namespace ipinfo
 {
-    using System.Runtime.Serialization.Json;
     public partial class Main : Form
     {
+
         private const string url = "https://api-ipv4.ip.sb/geoip";
         private const string networkError = "Network error";
         private const string space = " ";
@@ -16,9 +23,11 @@ namespace ipinfo
             this.Top = Screen.PrimaryScreen.WorkingArea.Bottom - this.Height;
             new Thread(new ThreadStart(run)).Start();
         }
-        private void run() {
+
+        private void run()
+        {
             IPSB ipsb;
-            object? obj;
+            object obj;
             while (runFlag)
             {
                 obj = getIpInfo();
@@ -41,7 +50,8 @@ namespace ipinfo
             }
             Environment.Exit(0);
         }
-        private object? getIpInfo() {
+        private object getIpInfo()
+        {
             using (var client = new HttpClient())
             {
                 try
@@ -64,7 +74,8 @@ namespace ipinfo
 
         private void Main_MouseDown(object sender, MouseEventArgs e)
         {
-            switch (e.Button) { 
+            switch (e.Button)
+            {
                 case MouseButtons.Left:
                     down = true;
                     mousePoint.X = e.X;
@@ -78,7 +89,8 @@ namespace ipinfo
 
         private void Main_MouseMove(object sender, MouseEventArgs e)
         {
-            if (down && e.Button == MouseButtons.Left) {
+            if (down && e.Button == MouseButtons.Left)
+            {
                 this.Location = new Point(this.Location.X + e.X - mousePoint.X, this.Location.Y + e.Y - mousePoint.Y); ;
             }
         }

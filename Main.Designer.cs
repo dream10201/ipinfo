@@ -3,14 +3,14 @@
     partial class Main
     {
         /// <summary>
-        ///  Required designer variable.
+        /// 必需的设计器变量。
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        ///  Clean up any resources being used.
+        /// 清理所有正在使用的资源。
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,24 +20,29 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region Windows 窗体设计器生成的代码
 
         /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
+        /// 设计器支持所需的方法 - 不要修改
+        /// 使用代码编辑器修改此方法的内容。
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.ipInfoLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ipInfoLabel
             // 
-            resources.ApplyResources(this.ipInfoLabel, "ipInfoLabel");
+            this.ipInfoLabel.AutoSize = true;
             this.ipInfoLabel.BackColor = System.Drawing.Color.Transparent;
+            this.ipInfoLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.ipInfoLabel.ForeColor = System.Drawing.Color.MintCream;
+            this.ipInfoLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ipInfoLabel.Location = new System.Drawing.Point(12, 18);
             this.ipInfoLabel.Name = "ipInfoLabel";
+            this.ipInfoLabel.Size = new System.Drawing.Size(54, 21);
+            this.ipInfoLabel.TabIndex = 0;
+            this.ipInfoLabel.Text = ". . . . . .";
             this.ipInfoLabel.UseMnemonic = false;
             this.ipInfoLabel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Main_MouseDown);
             this.ipInfoLabel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Main_MouseMove);
@@ -45,19 +50,21 @@
             // 
             // Main
             // 
-            resources.ApplyResources(this, "$this");
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.CausesValidation = false;
+            this.ClientSize = new System.Drawing.Size(400, 48);
             this.ControlBox = false;
             this.Controls.Add(this.ipInfoLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
-            this.MdiChildrenMinimizedAnchorBottom = false;
             this.MinimizeBox = false;
             this.Name = "Main";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Text = "Main";
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.Color.Black;
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Main_MouseDown);
@@ -70,6 +77,7 @@
 
         #endregion
 
-        private Label ipInfoLabel;
+        private System.Windows.Forms.Label ipInfoLabel;
     }
 }
+
