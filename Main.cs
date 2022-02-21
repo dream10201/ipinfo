@@ -24,33 +24,33 @@ namespace ipinfo
             new Thread(new ThreadStart(run)).Start();
         }
 
+        private void checkIpInfo() {
+            IPSB ipsb = getIpInfo();
+            if (ipsb != null)
+            {
+                this.Invoke(new Action(() =>
+                {
+                    this.ipInfoLabel.Text = ipsb.Ip + space + ipsb.Organization;
+                }));
+            }
+            else
+            {
+                this.Invoke(new Action(() =>
+                {
+                    this.ipInfoLabel.Text = networkError;
+                }));
+            }
+        }
         private void run()
         {
-            IPSB ipsb;
-            object obj;
             while (runFlag)
             {
-                obj = getIpInfo();
-                if (obj != null)
-                {
-                    ipsb = (IPSB)obj;
-                    this.Invoke(new Action(() =>
-                    {
-                        this.ipInfoLabel.Text = ipsb.Ip + space + ipsb.Organization;
-                    }));
-                }
-                else
-                {
-                    this.Invoke(new Action(() =>
-                    {
-                        this.ipInfoLabel.Text = networkError;
-                    }));
-                }
+                checkIpInfo();
                 Thread.Sleep(5000);
             }
             Environment.Exit(0);
         }
-        private object getIpInfo()
+        private IPSB getIpInfo()
         {
             using (var client = new HttpClient())
             {
@@ -60,7 +60,7 @@ namespace ipinfo
                     {
                         if (stream != null)
                         {
-                            return new DataContractJsonSerializer(typeof(IPSB)).ReadObject(stream);
+                            return (IPSB)new DataContractJsonSerializer(typeof(IPSB)).ReadObject(stream);
                         }
                     }
                 }
