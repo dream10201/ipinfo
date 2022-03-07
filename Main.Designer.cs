@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.ipInfoLabel = new System.Windows.Forms.Label();
+            this.speedLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ipInfoLabel
@@ -48,14 +49,28 @@
             this.ipInfoLabel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Main_MouseMove);
             this.ipInfoLabel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Main_MouseUp);
             // 
+            // speedLabel
+            // 
+            this.speedLabel.AutoSize = true;
+            this.speedLabel.BackColor = System.Drawing.Color.Transparent;
+            this.speedLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.speedLabel.ForeColor = System.Drawing.Color.MintCream;
+            this.speedLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.speedLabel.Location = new System.Drawing.Point(336, 18);
+            this.speedLabel.Name = "speedLabel";
+            this.speedLabel.Size = new System.Drawing.Size(0, 21);
+            this.speedLabel.TabIndex = 1;
+            this.speedLabel.UseMnemonic = false;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.CausesValidation = false;
-            this.ClientSize = new System.Drawing.Size(400, 48);
+            this.ClientSize = new System.Drawing.Size(430, 48);
             this.ControlBox = false;
+            this.Controls.Add(this.speedLabel);
             this.Controls.Add(this.ipInfoLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
@@ -78,6 +93,7 @@
         #endregion
 
         private System.Windows.Forms.Label ipInfoLabel;
+        private System.Windows.Forms.Label speedLabel;
     }
 }
 
