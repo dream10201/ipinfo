@@ -56,7 +56,7 @@
             this.speedLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.speedLabel.ForeColor = System.Drawing.Color.MintCream;
             this.speedLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.speedLabel.Location = new System.Drawing.Point(336, 18);
+            this.speedLabel.Location = new System.Drawing.Point(345, 18);
             this.speedLabel.Name = "speedLabel";
             this.speedLabel.Size = new System.Drawing.Size(0, 21);
             this.speedLabel.TabIndex = 1;
@@ -68,7 +68,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.CausesValidation = false;
-            this.ClientSize = new System.Drawing.Size(430, 48);
+            this.ClientSize = new System.Drawing.Size(459, 48);
             this.ControlBox = false;
             this.Controls.Add(this.speedLabel);
             this.Controls.Add(this.ipInfoLabel);
