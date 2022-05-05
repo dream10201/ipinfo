@@ -11,10 +11,9 @@ namespace ipinfo
     delegate void SetLabelTextCallback(string text, Label label);
     public partial class Main : Form
     {
-
+        private HttpClient client;
         private const string url = "https://api-ipv4.ip.sb/geoip";
         private const string networkError = "Network error";
-        private const string space = " ";
         private const string B = "{0:G}B/s";
         private const string KB = "{0:G}KB/s";
         private const string MB = "{0:G}MB/s";
@@ -28,6 +27,21 @@ namespace ipinfo
         private const string NB = "{0:G}NB/s";
         private const string DB = "{0:G}DB/s";
         private const string CB = "{0:G}CB/s";
+
+
+        private const double BInterval = 1024d;
+        private const double KBInterval = 1024d * 1024;
+        private const double MBInterval = 1024d * 1024 * 1024;
+        private const double GBInterval = 1024d * 1024 * 1024 * 1024;
+        private const double TBInterval = 1024d * 1024 * 1024 * 1024 * 1024;
+        private const double PBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024;
+        private const double EBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
+        private const double ZBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
+        private const double YBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
+        private const double BBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
+        private const double NBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
+        private const double DBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
+        private const double CBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
         private bool down = false;
         private bool runFlag = true;
         private Point mousePoint;
@@ -37,7 +51,7 @@ namespace ipinfo
             InitializeComponent();
             setLabelTextCallback = UpdateLabelText;
             this.Left = Screen.PrimaryScreen.WorkingArea.Right - this.Width;
-            this.Top = Screen.PrimaryScreen.WorkingArea.Bottom - this.Height-20;
+            this.Top = Screen.PrimaryScreen.WorkingArea.Bottom - this.Height;
             new Thread(new ThreadStart(run)).Start();
             new Thread(new ThreadStart(speed)).Start();
         }
@@ -51,7 +65,9 @@ namespace ipinfo
             long revCount;
             //long SendSpeed;
             long RevSpeed;
-            while (true)
+            string cache = string.Empty;
+            int limit = 1000;
+            while (runFlag)
             {
                 sendCount = 0;
                 revCount = 0;
@@ -60,10 +76,12 @@ namespace ipinfo
                     foreach (NetworkInterface adapter in nics)
                     {
                         ipv4Statistics = adapter.GetIPv4Statistics();
-                        sendCount += ipv4Statistics.BytesSent; revCount += ipv4Statistics.BytesReceived;
+                        sendCount += ipv4Statistics.BytesSent;
+                        revCount += ipv4Statistics.BytesReceived;
                     }
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     nics = NetworkInterface.GetAllNetworkInterfaces();
                     continue;
                 }
@@ -73,59 +91,60 @@ namespace ipinfo
                 //var RevCount = (revCount / 1024 / 1024).ToString();
                 lastRevCount = revCount;
                 //lastSendCount = sendCount;
-                if (RevSpeed < 1024)
+                if (RevSpeed < BInterval)
                 {
-                    UpdateLabelText(String.Format(B, RevSpeed), this.speedLabel);
+                    cache = String.Format(B, RevSpeed);
                 }
-                else if (RevSpeed < 1024d * 1024)
+                else if (RevSpeed < KBInterval)
                 {
-                    UpdateLabelText(String.Format(KB, Math.Round(RevSpeed / 1024d, 2)), this.speedLabel);
+                    cache = String.Format(KB, Math.Round(RevSpeed / 1024d, 2));
                 }
-                else if (RevSpeed < 1024d * 1024 * 1024)
+                else if (RevSpeed < MBInterval)
                 {
-                    UpdateLabelText(String.Format(MB, Math.Round(RevSpeed / 1024d / 1024, 2)), this.speedLabel);
+                    cache = String.Format(MB, Math.Round(RevSpeed / 1024d / 1024, 2));
                 }
-                else if (RevSpeed < 1024d * 1024 * 1024 * 1024)
+                else if (RevSpeed < GBInterval)
                 {
-                    UpdateLabelText(String.Format(GB, Math.Round(RevSpeed / 1024d / 1024 / 1024, 2)), this.speedLabel);
+                    cache = String.Format(GB, Math.Round(RevSpeed / 1024d / 1024 / 1024, 2));
                 }
-                else if (RevSpeed < 1024d * 1024 * 1024 * 1024 * 1024)
+                else if (RevSpeed < TBInterval)
                 {
-                    UpdateLabelText(String.Format(TB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024, 2)), this.speedLabel);
+                    cache = String.Format(TB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024, 2));
                 }
-                else if (RevSpeed < 1024d * 1024 * 1024 * 1024 * 1024 * 1024)
+                else if (RevSpeed < PBInterval)
                 {
-                    UpdateLabelText(String.Format(PB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024, 2)), this.speedLabel);
+                    cache = String.Format(PB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024, 2));
                 }
-                else if (RevSpeed < 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+                else if (RevSpeed < EBInterval)
                 {
-                    UpdateLabelText(String.Format(EB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024, 2)), this.speedLabel);
+                    cache = String.Format(EB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024, 2));
                 }
-                else if (RevSpeed < 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+                else if (RevSpeed < ZBInterval)
                 {
-                    UpdateLabelText(String.Format(ZB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2)), this.speedLabel);
+                    cache = String.Format(ZB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
                 }
-                else if (RevSpeed < 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+                else if (RevSpeed < YBInterval)
                 {
-                    UpdateLabelText(String.Format(YB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2)), this.speedLabel);
+                    cache = String.Format(YB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
                 }
-                else if (RevSpeed < 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+                else if (RevSpeed < BBInterval)
                 {
-                    UpdateLabelText(String.Format(BB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2)), this.speedLabel);
+                    cache = String.Format(BB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
                 }
-                else if (RevSpeed < 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+                else if (RevSpeed < NBInterval)
                 {
-                    UpdateLabelText(String.Format(NB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2)), this.speedLabel);
+                    cache = String.Format(NB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
                 }
-                else if (RevSpeed < 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+                else if (RevSpeed < DBInterval)
                 {
-                    UpdateLabelText(String.Format(DB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2)), this.speedLabel);
+                    cache = String.Format(DB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
                 }
-                else if (RevSpeed < 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024)
+                else if (RevSpeed < CBInterval)
                 {
-                    UpdateLabelText(String.Format(CB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2)), this.speedLabel);
+                    cache = String.Format(CB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
                 }
-                Thread.Sleep(1000);
+                UpdateLabelText(cache, this.speedLabel);
+                Thread.Sleep(limit);
             }
         }
         private void UpdateLabelText(string text, Label label)
@@ -142,40 +161,41 @@ namespace ipinfo
         private void run()
         {
             IPSB ipsb;
+            int limit = 5000;
+            client = new HttpClient();
             while (runFlag)
             {
                 ipsb = getIpInfo();
                 if (ipsb != null)
                 {
-                    UpdateLabelText(ipsb.Ip + space + ipsb.Organization, this.ipInfoLabel);
+                    UpdateLabelText(ipsb.Organization, this.ipInfoLabel);
+                    UpdateLabelText(ipsb.Ip, this.ip);
                 }
                 else
                 {
                     UpdateLabelText(networkError, this.ipInfoLabel);
                 }
-                Thread.Sleep(5000);
+                Thread.Sleep(limit);
             }
-            Environment.Exit(0);
         }
         private IPSB getIpInfo()
         {
-            using (var client = new HttpClient())
+            try
             {
-                try
+                using (var stream = client.GetStreamAsync(url))
                 {
-                    using (var stream = client.GetStreamAsync(url).Result)
+                    stream.Wait();
+                    if (stream.IsCompleted)
                     {
-                        if (stream != null)
-                        {
-                            return (IPSB)new DataContractJsonSerializer(typeof(IPSB)).ReadObject(stream);
-                        }
+                        return (IPSB)new DataContractJsonSerializer(typeof(IPSB)).ReadObject(stream.Result);
                     }
                 }
-                catch (Exception)
-                {
-                }
-                return null;
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message.ToString());
+            }
+            return null;
 
         }
 
@@ -190,6 +210,7 @@ namespace ipinfo
                     break;
                 case MouseButtons.Right:
                     runFlag = false;
+                    Environment.Exit(0);
                     break;
             }
         }
