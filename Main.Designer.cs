@@ -37,13 +37,13 @@
             // 
             this.ipInfoLabel.AutoSize = true;
             this.ipInfoLabel.BackColor = System.Drawing.Color.Transparent;
-            this.ipInfoLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.ipInfoLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ipInfoLabel.ForeColor = System.Drawing.Color.MintCream;
             this.ipInfoLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ipInfoLabel.Location = new System.Drawing.Point(12, 9);
             this.ipInfoLabel.Name = "ipInfoLabel";
             this.ipInfoLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.ipInfoLabel.Size = new System.Drawing.Size(54, 21);
+            this.ipInfoLabel.Size = new System.Drawing.Size(40, 15);
             this.ipInfoLabel.TabIndex = 0;
             this.ipInfoLabel.Text = ". . . . . .";
             this.ipInfoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -56,12 +56,12 @@
             // 
             this.speedLabel.AutoSize = true;
             this.speedLabel.BackColor = System.Drawing.Color.Transparent;
-            this.speedLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.speedLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.speedLabel.ForeColor = System.Drawing.Color.MintCream;
             this.speedLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.speedLabel.Location = new System.Drawing.Point(148, 30);
             this.speedLabel.Name = "speedLabel";
-            this.speedLabel.Size = new System.Drawing.Size(43, 21);
+            this.speedLabel.Size = new System.Drawing.Size(32, 15);
             this.speedLabel.TabIndex = 1;
             this.speedLabel.Text = "0B/s";
             this.speedLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -74,12 +74,12 @@
             // 
             this.ip.AutoSize = true;
             this.ip.BackColor = System.Drawing.Color.Transparent;
-            this.ip.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.ip.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ip.ForeColor = System.Drawing.Color.MintCream;
             this.ip.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ip.Location = new System.Drawing.Point(12, 30);
             this.ip.Name = "ip";
-            this.ip.Size = new System.Drawing.Size(76, 21);
+            this.ip.Size = new System.Drawing.Size(58, 15);
             this.ip.TabIndex = 2;
             this.ip.Text = "127.0.0.1";
             this.ip.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -94,7 +94,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.CausesValidation = false;
-            this.ClientSize = new System.Drawing.Size(600, 60);
+            this.ClientSize = new System.Drawing.Size(600, 50);
             this.ControlBox = false;
             this.Controls.Add(this.ip);
             this.Controls.Add(this.speedLabel);
