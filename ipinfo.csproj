@@ -82,7 +82,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ipsb.cs" />
+    <Compile Include="bean\IpApi.cs" />
+    <Compile Include="bean\Ipsb.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>

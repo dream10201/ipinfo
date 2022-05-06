@@ -1,10 +1,11 @@
 ﻿using System.Runtime.Serialization;
 
-namespace ipinfo
+namespace ipinfo.bean
 {
     [DataContract]
-    internal class IPSB
+    internal class Ipsb
     {
+        public const string url = "https://api-ipv4.ip.sb/geoip";
 
         [DataMember(Name = "organization")]
         public string Organization { get; set; }

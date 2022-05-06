@@ -5,13 +5,17 @@ using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Net.Http;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
+using System.IO;
+using ipinfo.bean;
 
 namespace ipinfo
 {
     delegate void SetLabelTextCallback(string text, Label label);
     public partial class Main : Form
     {
-        private const string url = "https://api-ipv4.ip.sb/geoip";
+        private HttpClient client;
+        private Task<Stream> stream;
         private const string networkError = "Network error";
         private const string B = "{0:G}B/s";
         private const string KB = "{0:G}KB/s";
@@ -159,35 +163,68 @@ namespace ipinfo
         }
         private void run()
         {
-            IPSB ipsb;
+            IpApi ipapi;
+            Ipsb ipsb;
             int limit = 5000;
             while (runFlag)
             {
-                ipsb = getIpInfo();
-                if (ipsb != null)
+                ipapi = getIpApi();
+                if (ipapi != null)
                 {
-                    UpdateLabelText(ipsb.Organization, this.ipInfoLabel);
-                    UpdateLabelText(ipsb.Ip, this.ip);
+                    UpdateLabelText(ipapi.Isp, this.ipInfoLabel);
+                    UpdateLabelText(ipapi.Query, this.ip);
                 }
                 else
                 {
-                    UpdateLabelText(networkError, this.ipInfoLabel);
+                    ipsb=getIpsb();
+                    if (ipsb != null)
+                    {
+                        UpdateLabelText(ipsb.AsnOrganization, this.ipInfoLabel);
+                        UpdateLabelText(ipsb.Ip, this.ip);
+                    }
+                    else
+                    {
+                        UpdateLabelText(networkError, this.ipInfoLabel);
+                    }
                 }
                 Thread.Sleep(limit);
             }
         }
-        private IPSB getIpInfo()
+        private IpApi getIpApi()
         {
             try
             {
-                using (HttpClient client = new HttpClient())
+                using (client = new HttpClient())
                 {
-                    using (var stream = client.GetStreamAsync(url))
+                    using (stream = client.GetStreamAsync(IpApi.url))
                     {
                         stream.Wait();
                         if (stream.IsCompleted)
                         {
-                            return (IPSB)new DataContractJsonSerializer(typeof(IPSB)).ReadObject(stream.Result);
+                            return (IpApi)new DataContractJsonSerializer(typeof(IpApi)).ReadObject(stream.Result);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message.ToString());
+            }
+            return null;
+
+        }
+        private Ipsb getIpsb()
+        {
+            try
+            {
+                using (client = new HttpClient())
+                {
+                    using (stream = client.GetStreamAsync(Ipsb.url))
+                    {
+                        stream.Wait();
+                        if (stream.IsCompleted)
+                        {
+                            return (Ipsb)new DataContractJsonSerializer(typeof(Ipsb)).ReadObject(stream.Result);
                         }
                     }
                 }
