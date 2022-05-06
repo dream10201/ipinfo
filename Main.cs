@@ -11,7 +11,6 @@ namespace ipinfo
     delegate void SetLabelTextCallback(string text, Label label);
     public partial class Main : Form
     {
-        private HttpClient client;
         private const string url = "https://api-ipv4.ip.sb/geoip";
         private const string networkError = "Network error";
         private const string B = "{0:G}B/s";
@@ -162,7 +161,6 @@ namespace ipinfo
         {
             IPSB ipsb;
             int limit = 5000;
-            client = new HttpClient();
             while (runFlag)
             {
                 ipsb = getIpInfo();
@@ -182,12 +180,15 @@ namespace ipinfo
         {
             try
             {
-                using (var stream = client.GetStreamAsync(url))
+                using (HttpClient client = new HttpClient())
                 {
-                    stream.Wait();
-                    if (stream.IsCompleted)
+                    using (var stream = client.GetStreamAsync(url))
                     {
-                        return (IPSB)new DataContractJsonSerializer(typeof(IPSB)).ReadObject(stream.Result);
+                        stream.Wait();
+                        if (stream.IsCompleted)
+                        {
+                            return (IPSB)new DataContractJsonSerializer(typeof(IPSB)).ReadObject(stream.Result);
+                        }
                     }
                 }
             }
