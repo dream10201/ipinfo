@@ -68,7 +68,7 @@ namespace ipinfo
             long revCount;
             //long SendSpeed;
             long RevSpeed;
-            string cache = string.Empty;
+            string cache;
             int limit = 1000;
             while (runFlag)
             {
@@ -76,14 +76,14 @@ namespace ipinfo
                 revCount = 0;
                 try
                 {
-                    foreach (NetworkInterface adapter in nics)
+                    for (int i = 0; i < nics.Length; i++)
                     {
-                        ipv4Statistics = adapter.GetIPv4Statistics();
+                        ipv4Statistics = nics[i].GetIPv4Statistics();
                         sendCount += ipv4Statistics.BytesSent;
                         revCount += ipv4Statistics.BytesReceived;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     nics = NetworkInterface.GetAllNetworkInterfaces();
                     continue;
@@ -163,43 +163,44 @@ namespace ipinfo
         }
         private void run()
         {
-            IpApi ipapi = null;
-            Ipsb ipsb = null;
-            Ipwho ipwho = null;
+            IpApi ipapi;
+            Ipsb ipsb;
+            Ipwho ipwho;
             string ip;
             string info;
+            Stream stream;
             int limit = 5000;
             while (runFlag)
             {
                 for (; ; )
                 {
-                    ip=String.Empty;
+                    ip = String.Empty;
                     info = networkError;
-                    using (Stream stream = getIpInfo(IpApi.url))
+                    using (stream = getIpInfo(IpApi.url))
                     {
-                        ipapi = (IpApi)new DataContractJsonSerializer(typeof(IpApi)).ReadObject(stream);
-                        if (ipapi != null)
+                        if (stream != null)
                         {
+                            ipapi = (IpApi)new DataContractJsonSerializer(typeof(IpApi)).ReadObject(stream);
                             ip = ipapi.Query;
                             info = ipapi.Isp;
                             break;
                         }
                     }
-                    using (Stream stream = getIpInfo(Ipwho.url))
+                    using (stream = getIpInfo(Ipwho.url))
                     {
-                        ipwho = (Ipwho)new DataContractJsonSerializer(typeof(Ipwho)).ReadObject(stream);
-                        if (ipwho != null)
+                        if (stream != null)
                         {
+                            ipwho = (Ipwho)new DataContractJsonSerializer(typeof(Ipwho)).ReadObject(stream);
                             ip = ipwho.Ip;
                             info = ipwho.Connection.Org;
                             break;
                         }
                     }
-                    using (Stream stream = getIpInfo(Ipsb.url))
+                    using (stream = getIpInfo(Ipsb.url))
                     {
-                        ipsb = (Ipsb)new DataContractJsonSerializer(typeof(Ipsb)).ReadObject(stream);
-                        if (ipsb != null)
+                        if (stream != null)
                         {
+                            ipsb = (Ipsb)new DataContractJsonSerializer(typeof(Ipsb)).ReadObject(stream);
                             ip = ipsb.Ip;
                             info = ipsb.AsnOrganization;
                             break;
@@ -227,7 +228,7 @@ namespace ipinfo
                     stream.Dispose();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
             return null;
