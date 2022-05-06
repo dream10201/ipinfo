@@ -142,7 +142,7 @@ namespace ipinfo
                 {
                     cache = String.Format(DB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
                 }
-                else if (RevSpeed < CBInterval)
+                else// if (RevSpeed < CBInterval)
                 {
                     cache = String.Format(CB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
                 }
