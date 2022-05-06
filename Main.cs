@@ -163,78 +163,74 @@ namespace ipinfo
         }
         private void run()
         {
-            IpApi ipapi;
-            Ipsb ipsb;
+            IpApi ipapi = null;
+            Ipsb ipsb = null;
+            Ipwho ipwho = null;
+            string ip;
+            string info;
             int limit = 5000;
             while (runFlag)
             {
-                ipapi = getIpApi();
-                if (ipapi != null)
+                for (; ; )
                 {
-                    UpdateLabelText(ipapi.Isp, this.ipInfoLabel);
-                    UpdateLabelText(ipapi.Query, this.ip);
-                }
-                else
-                {
-                    ipsb=getIpsb();
-                    if (ipsb != null)
+                    ip=String.Empty;
+                    info = networkError;
+                    using (Stream stream = getIpInfo(IpApi.url))
                     {
-                        UpdateLabelText(ipsb.AsnOrganization, this.ipInfoLabel);
-                        UpdateLabelText(ipsb.Ip, this.ip);
+                        ipapi = (IpApi)new DataContractJsonSerializer(typeof(IpApi)).ReadObject(stream);
+                        if (ipapi != null)
+                        {
+                            ip = ipapi.Query;
+                            info = ipapi.Isp;
+                            break;
+                        }
                     }
-                    else
+                    using (Stream stream = getIpInfo(Ipwho.url))
                     {
-                        UpdateLabelText(networkError, this.ipInfoLabel);
+                        ipwho = (Ipwho)new DataContractJsonSerializer(typeof(Ipwho)).ReadObject(stream);
+                        if (ipwho != null)
+                        {
+                            ip = ipwho.Ip;
+                            info = ipwho.Connection.Org;
+                            break;
+                        }
+                    }
+                    using (Stream stream = getIpInfo(Ipsb.url))
+                    {
+                        ipsb = (Ipsb)new DataContractJsonSerializer(typeof(Ipsb)).ReadObject(stream);
+                        if (ipsb != null)
+                        {
+                            ip = ipsb.Ip;
+                            info = ipsb.AsnOrganization;
+                            break;
+                        }
                     }
                 }
+
+                UpdateLabelText(info, this.ipInfoLabel);
+                UpdateLabelText(ip, this.ip);
                 Thread.Sleep(limit);
             }
         }
-        private IpApi getIpApi()
+        private Stream getIpInfo(string url)
         {
             try
             {
                 using (client = new HttpClient())
                 {
-                    using (stream = client.GetStreamAsync(IpApi.url))
+                    stream = client.GetStreamAsync(url);
+                    stream.Wait();
+                    if (stream.IsCompleted)
                     {
-                        stream.Wait();
-                        if (stream.IsCompleted)
-                        {
-                            return (IpApi)new DataContractJsonSerializer(typeof(IpApi)).ReadObject(stream.Result);
-                        }
+                        return stream.Result;
                     }
+                    stream.Dispose();
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message.ToString());
             }
             return null;
-
-        }
-        private Ipsb getIpsb()
-        {
-            try
-            {
-                using (client = new HttpClient())
-                {
-                    using (stream = client.GetStreamAsync(Ipsb.url))
-                    {
-                        stream.Wait();
-                        if (stream.IsCompleted)
-                        {
-                            return (Ipsb)new DataContractJsonSerializer(typeof(Ipsb)).ReadObject(stream.Result);
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message.ToString());
-            }
-            return null;
-
         }
 
         private void Main_MouseDown(object sender, MouseEventArgs e)

@@ -84,6 +84,10 @@
   <ItemGroup>
     <Compile Include="bean\IpApi.cs" />
     <Compile Include="bean\Ipsb.cs" />
+    <Compile Include="bean\Ipwho.cs" />
+    <Compile Include="bean\ipwho\Connection.cs" />
+    <Compile Include="bean\ipwho\Flag.cs" />
+    <Compile Include="bean\ipwho\Timezone.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -105,7 +109,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="app.manifest" />
-    <None Include="ipinfo_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
