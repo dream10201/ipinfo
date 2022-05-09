@@ -8,28 +8,30 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.IO;
 using ipinfo.bean;
+using System.Text;
 
 namespace ipinfo
 {
     delegate void SetLabelTextCallback(string text, Label label);
     public partial class Main : Form
     {
+        private const int networkDelay = 5000;
+        private const int speedDealy = 1000;
         private HttpClient client;
         private Task<Stream> stream;
-        private const string networkError = "Network error";
-        private const string B = "{0:G}B/s";
-        private const string KB = "{0:G}KB/s";
-        private const string MB = "{0:G}MB/s";
-        private const string GB = "{0:G}GB/s";
-        private const string TB = "{0:G}TB/s";
-        private const string PB = "{0:G}PB/s";
-        private const string EB = "{0:G}EB/s";
-        private const string ZB = "{0:G}ZB/s";
-        private const string YB = "{0:G}YB/s";
-        private const string BB = "{0:G}BB/s";
-        private const string NB = "{0:G}NB/s";
-        private const string DB = "{0:G}DB/s";
-        private const string CB = "{0:G}CB/s";
+        private const string B = "B/s";
+        private const string KB = "KB/s";
+        private const string MB = "MB/s";
+        private const string GB = "GB/s";
+        private const string TB = "TB/s";
+        private const string PB = "PB/s";
+        private const string EB = "EB/s";
+        private const string ZB = "ZB/s";
+        private const string YB = "YB/s";
+        private const string BB = "BB/s";
+        private const string NB = "NB/s";
+        private const string DB = "DB/s";
+        private const string CB = "CB/s";
 
 
         private const double BInterval = 1024d;
@@ -44,7 +46,7 @@ namespace ipinfo
         private const double BBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
         private const double NBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
         private const double DBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
-        private const double CBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
+        //private const double CBInterval = 1024d * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
         private bool down = false;
         private bool runFlag = true;
         private Point mousePoint;
@@ -60,23 +62,24 @@ namespace ipinfo
         }
         private void speed()
         {
-            NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
             IPv4InterfaceStatistics ipv4Statistics;
+            NetworkInterface[] nics;
             //long lastSendCount = 0;
             long lastRevCount = 0;
             long sendCount;
             long revCount;
+            int i;
             //long SendSpeed;
             long RevSpeed;
-            string cache;
-            int limit = 1000;
+            StringBuilder speedCache = new StringBuilder();
             while (runFlag)
             {
                 sendCount = 0;
                 revCount = 0;
+                nics = NetworkInterface.GetAllNetworkInterfaces();
                 try
                 {
-                    for (int i = 0; i < nics.Length; i++)
+                    for (i = 0; i < nics.Length; i++)
                     {
                         ipv4Statistics = nics[i].GetIPv4Statistics();
                         sendCount += ipv4Statistics.BytesSent;
@@ -85,7 +88,7 @@ namespace ipinfo
                 }
                 catch (Exception)
                 {
-                    nics = NetworkInterface.GetAllNetworkInterfaces();
+                    Thread.Sleep(speedDealy);
                     continue;
                 }
                 //SendSpeed = sendCount - lastSendCount;
@@ -96,58 +99,72 @@ namespace ipinfo
                 //lastSendCount = sendCount;
                 if (RevSpeed < BInterval)
                 {
-                    cache = String.Format(B, RevSpeed);
+                    speedCache.Append(RevSpeed);
+                    speedCache.Append(B);
                 }
                 else if (RevSpeed < KBInterval)
                 {
-                    cache = String.Format(KB, Math.Round(RevSpeed / 1024d, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d, 2));
+                    speedCache.Append(KB);
                 }
                 else if (RevSpeed < MBInterval)
                 {
-                    cache = String.Format(MB, Math.Round(RevSpeed / 1024d / 1024, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d / 1024, 2));
+                    speedCache.Append(MB);
                 }
                 else if (RevSpeed < GBInterval)
                 {
-                    cache = String.Format(GB, Math.Round(RevSpeed / 1024d / 1024 / 1024, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d / 1024 / 1024, 2));
+                    speedCache.Append(GB);
                 }
                 else if (RevSpeed < TBInterval)
                 {
-                    cache = String.Format(TB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(TB);
                 }
                 else if (RevSpeed < PBInterval)
                 {
-                    cache = String.Format(PB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(PB);
                 }
                 else if (RevSpeed < EBInterval)
                 {
-                    cache = String.Format(EB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(EB);
                 }
                 else if (RevSpeed < ZBInterval)
                 {
-                    cache = String.Format(ZB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(ZB);
                 }
                 else if (RevSpeed < YBInterval)
                 {
-                    cache = String.Format(YB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(YB);
                 }
                 else if (RevSpeed < BBInterval)
                 {
-                    cache = String.Format(BB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(BB);
                 }
                 else if (RevSpeed < NBInterval)
                 {
-                    cache = String.Format(NB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(NB);
                 }
                 else if (RevSpeed < DBInterval)
                 {
-                    cache = String.Format(DB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(DB);
                 }
                 else// if (RevSpeed < CBInterval)
                 {
-                    cache = String.Format(CB, Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(Math.Round(RevSpeed / 1024d / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024 / 1024, 2));
+                    speedCache.Append(CB);
                 }
-                UpdateLabelText(cache, this.speedLabel);
-                Thread.Sleep(limit);
+                UpdateLabelText(speedCache.ToString(), this.speedLabel);
+                speedCache.Clear();
+                Thread.Sleep(speedDealy);
             }
         }
         private void UpdateLabelText(string text, Label label)
@@ -166,72 +183,71 @@ namespace ipinfo
             IpApi ipapi;
             Ipsb ipsb;
             Ipwho ipwho;
-            string ip;
-            string info;
-            Stream stream;
-            int limit = 5000;
+            StringBuilder ip = new StringBuilder();
+            StringBuilder info = new StringBuilder();
             while (runFlag)
             {
                 for (; ; )
                 {
-                    ip = String.Empty;
-                    info = networkError;
-                    using (stream = getIpInfo(IpApi.url))
+                    using (client = new HttpClient())
                     {
-                        if (stream != null)
+                        try
                         {
-                            ipapi = (IpApi)new DataContractJsonSerializer(typeof(IpApi)).ReadObject(stream);
-                            ip = ipapi.Query;
-                            info = ipapi.Isp;
-                            break;
-                        }
-                    }
-                    using (stream = getIpInfo(Ipwho.url))
-                    {
-                        if (stream != null)
-                        {
-                            ipwho = (Ipwho)new DataContractJsonSerializer(typeof(Ipwho)).ReadObject(stream);
-                            ip = ipwho.Ip;
-                            info = ipwho.Connection.Org;
-                            break;
-                        }
-                    }
-                    using (stream = getIpInfo(Ipsb.url))
-                    {
-                        if (stream != null)
-                        {
-                            ipsb = (Ipsb)new DataContractJsonSerializer(typeof(Ipsb)).ReadObject(stream);
-                            ip = ipsb.Ip;
-                            info = ipsb.AsnOrganization;
-                            break;
-                        }
-                    }
-                }
+                            using (stream = client.GetStreamAsync(IpApi.url))
+                            {
 
-                UpdateLabelText(info, this.ipInfoLabel);
-                UpdateLabelText(ip, this.ip);
-                Thread.Sleep(limit);
-            }
-        }
-        private Stream getIpInfo(string url)
-        {
-            try
-            {
-                using (client = new HttpClient())
-                {
-                    stream = client.GetStreamAsync(url);
-                    stream.Wait();
-                    if (stream.IsCompleted)
-                    {
-                        return stream.Result;
+                                stream.Wait();
+                                if (stream.IsCompleted)
+                                {
+                                    ipapi = (IpApi)new DataContractJsonSerializer(typeof(IpApi)).ReadObject(stream.Result);
+                                    ip.Append(ipapi.Query);
+                                    info.Append(ipapi.Isp);
+                                    break;
+                                }
+                            }
+                        }
+                        catch { }
+                        try
+                        {
+                            using (stream = client.GetStreamAsync(Ipwho.url))
+                            {
+
+                                stream.Wait();
+                                if (stream.IsCompleted)
+                                {
+                                    ipwho = (Ipwho)new DataContractJsonSerializer(typeof(Ipwho)).ReadObject(stream.Result);
+                                    ip.Append(ipwho.Ip);
+                                    info.Append(ipwho.Connection.Org);
+                                    break;
+                                }
+                            }
+                        }
+                        catch { }
+                        try
+                        {
+                            using (stream = client.GetStreamAsync(Ipsb.url))
+                            {
+
+                                stream.Wait();
+                                if (stream.IsCompleted)
+                                {
+                                    ipsb = (Ipsb)new DataContractJsonSerializer(typeof(Ipsb)).ReadObject(stream.Result);
+                                    ip.Append(ipsb.Ip);
+                                    info.Append(ipsb.AsnOrganization);
+                                    break;
+                                }
+                            }
+                        }
+                        catch { }
                     }
-                    stream.Dispose();
+                    Thread.Sleep(networkDelay);
                 }
+                UpdateLabelText(info.ToString(), this.ipInfoLabel);
+                UpdateLabelText(ip.ToString(), this.ip);
+                info.Clear();
+                ip.Clear();
+                Thread.Sleep(networkDelay);
             }
-            catch (Exception)
-            {
-            }
-            return null;
         }
 
         private void Main_MouseDown(object sender, MouseEventArgs e)
