@@ -193,22 +193,6 @@ namespace ipinfo
                     {
                         try
                         {
-                            using (stream = client.GetStreamAsync(IpApi.url))
-                            {
-
-                                stream.Wait();
-                                if (stream.IsCompleted)
-                                {
-                                    ipapi = (IpApi)new DataContractJsonSerializer(typeof(IpApi)).ReadObject(stream.Result);
-                                    ip.Append(ipapi.Query);
-                                    info.Append(ipapi.Isp);
-                                    break;
-                                }
-                            }
-                        }
-                        catch { }
-                        try
-                        {
                             using (stream = client.GetStreamAsync(Ipwho.url))
                             {
 
@@ -234,6 +218,22 @@ namespace ipinfo
                                     ipsb = (Ipsb)new DataContractJsonSerializer(typeof(Ipsb)).ReadObject(stream.Result);
                                     ip.Append(ipsb.Ip);
                                     info.Append(ipsb.AsnOrganization);
+                                    break;
+                                }
+                            }
+                        }
+                        catch { }
+                        try
+                        {
+                            using (stream = client.GetStreamAsync(IpApi.url))
+                            {
+
+                                stream.Wait();
+                                if (stream.IsCompleted)
+                                {
+                                    ipapi = (IpApi)new DataContractJsonSerializer(typeof(IpApi)).ReadObject(stream.Result);
+                                    ip.Append(ipapi.Query);
+                                    info.Append(ipapi.Isp);
                                     break;
                                 }
                             }
